@@ -18,7 +18,21 @@ if(NOT Catch2_FOUND)
     FetchContent_MakeAvailable(catch2)
 endif()
 
-add_executable(torture-fmt test/torture_fmt.cpp) # Adjust path as needed
+find_package(fmt REQUIRED)
+find_package(Boost REQUIRED COMPONENTS filesystem)
+find_package(eigen-fmt REQUIRED)
+find_package(Eigen3 REQUIRED)
+find_package(RBDyn REQUIRED)
+find_package(SpaceVecAlg REQUIRED)
+
+add_executable(torture-fmt test/torture_fmt.cpp)
+target_include_directories(torture-fmt PRIVATE ${CMAKE_SOURCE_DIR}/include)
+target_link_libraries(torture-fmt PRIVATE 
+  fmt::fmt
+  Boost::filesystem
+  eigen-fmt::eigen-fmt
+  Eigen3::Eigen
+)
 
 target_link_libraries(torture-fmt PRIVATE Catch2::Catch2WithMain)
 
