@@ -29,7 +29,6 @@
             {
               stdenv,
               cmake,
-              catch2_3,
               fmt,
               eigen-fmt,
               spacevecalg,
@@ -45,7 +44,6 @@
                 fmt
                 spacevecalg
                 rbdyn
-                catch2_3
                 eigen-fmt
                 boost
               ];

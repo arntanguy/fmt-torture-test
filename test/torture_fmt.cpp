@@ -1,75 +1,66 @@
+#define BOOST_TEST_MODULE FmtTortureTest
 #include <fmt_formatters.h>
 
-#include <catch2/catch_test_macros.hpp>
+#include <boost/test/unit_test.hpp>
 
-/**
-  fmt version summary:
-  Ubuntu 20.04 (Focal)	6.1.2
-  Ubuntu 22.04 (Jammy)	8.1.1 -> has std::ostream support
-  Ubuntu 24.04 (Noble)	9.1.0 -> automatics std::ostream support was removed
-*/
+// Helper for generic test
+template <typename T>
+void check_fmt_nonempty(const std::string& label, const T& value) {
+  BOOST_CHECK(!fmt::format("{}: {}", label, value).empty());
+  fmt::print("{}: {}\n", label, value);
+}
 
-TEST_CASE("Eigen fixed size types can be formatted with fmt", "[fmt][eigen]") {
+#define SVA_FMT_TEST(TYPE, METHOD) check_fmt_nonempty(#TYPE, TYPE::METHOD())
+#define SVA_FMT_TEST_CTOR(TYPE) check_fmt_nonempty(#TYPE, TYPE{})
+
+BOOST_AUTO_TEST_CASE(Eigen_fixed_size_types_can_be_formatted_with_fmt) {
   Eigen::Vector3d v(1.0, 2.0, 3.0);
   Eigen::Matrix3d m = Eigen::Matrix3d::Identity();
 
-  // Just check that formatting compiles
-  REQUIRE_FALSE(fmt::format("Vector: {}", v).empty());
-  REQUIRE_FALSE(fmt::format("Matrix:\n{}", m).empty());
-  REQUIRE_FALSE(fmt::format("Matrix transpose:\n{}", m.transpose()).empty());
+  BOOST_CHECK(!fmt::format("Vector: {}", v).empty());
+  BOOST_CHECK(!fmt::format("Matrix:\n{}", m).empty());
+  BOOST_CHECK(!fmt::format("Matrix transpose:\n{}", m.transpose()).empty());
 
-  // Test print
-  fmt::print("Vector: {}", v);
-  fmt::print("Matrix: {}", m);
+  fmt::print("Vector: {}\n", v);
+  fmt::print("Matrix: {}\n", m);
 }
 
-TEST_CASE("Eigen dynamic size types can be formatted with fmt",
-          "[fmt][eigen]") {
+BOOST_AUTO_TEST_CASE(Eigen_dynamic_size_types_can_be_formatted_with_fmt) {
   Eigen::VectorXd v(3);
   v << 1.0, 2.0, 3.0;
   Eigen::MatrixXd m(3, 3);
   m = Eigen::Matrix3d::Identity();
 
-  // Just check that formatting compiles
-  REQUIRE_FALSE(fmt::format("Vector: {}", v).empty());
-  REQUIRE_FALSE(fmt::format("Matrix:\n{}", m).empty());
-  REQUIRE_FALSE(fmt::format("Matrix transpose:\n{}", m.transpose()).empty());
+  BOOST_CHECK(!fmt::format("Vector: {}", v).empty());
+  BOOST_CHECK(!fmt::format("Matrix:\n{}", m).empty());
+  BOOST_CHECK(!fmt::format("Matrix transpose:\n{}", m.transpose()).empty());
 
-  // Test print
-  fmt::print("Vector: {}", v);
-  fmt::print("Matrix: {}", m);
+  fmt::print("Vector: {}\n", v);
+  fmt::print("Matrix: {}\n", m);
 }
 
-TEST_CASE("sva::PTransformd can be formatted with fmt", "[fmt][ptransform]") {
+BOOST_AUTO_TEST_CASE(sva_PTransformd_can_be_formatted_with_fmt) {
   Eigen::Vector3d translation(1.0, 2.0, 3.0);
   Eigen::Matrix3d rotation = Eigen::Matrix3d::Identity();
   sva::PTransformd pt(rotation, translation);
 
   std::string pt_str = fmt::format("PTransform:\n{}", pt);
-  fmt::print("PTransform:\n{}", pt);
+  fmt::print("PTransform:\n{}\n", pt);
 
-  REQUIRE_FALSE(pt_str.empty());
+  BOOST_CHECK(!pt_str.empty());
 }
 
-template <typename T>
-void check_fmt_nonempty(const std::string& label, const T& value) {
-  REQUIRE_FALSE(fmt::format("{}: {}", label, value).empty());
-  fmt::print("{}: {}\n", label, value);
-}
-
-#define SVA_FMT_TEST(TYPE, METHOD) check_fmt_nonempty(#TYPE, TYPE::METHOD());
-
-#define SVA_FMT_TEST_CTOR(TYPE) check_fmt_nonempty(#TYPE, TYPE{});
-
-TEST_CASE("All sva types can be formatted with fmt", "[fmt][sva]") {
-  SVA_FMT_TEST_CTOR(sva::ABInertiad) SVA_FMT_TEST(sva::AdmittanceVecd, Zero);
-  SVA_FMT_TEST(sva::ForceVecd, Zero) SVA_FMT_TEST(sva::MotionVecd, Zero);
+BOOST_AUTO_TEST_CASE(All_sva_types_can_be_formatted_with_fmt) {
+  SVA_FMT_TEST_CTOR(sva::ABInertiad);
+  SVA_FMT_TEST(sva::AdmittanceVecd, Zero);
+  SVA_FMT_TEST(sva::ForceVecd, Zero);
+  SVA_FMT_TEST(sva::MotionVecd, Zero);
   SVA_FMT_TEST_CTOR(sva::RBInertiad);
   SVA_FMT_TEST(sva::PTransformd, Identity);
   SVA_FMT_TEST(sva::ImpedanceVecd, Zero);
 }
 
-TEST_CASE("sva function results can be formatted with fmt", "[fmt][sva]") {
+BOOST_AUTO_TEST_CASE(sva_function_results_can_be_formatted_with_fmt) {
   check_fmt_nonempty("sva::RotX", sva::RotX(mc_rtc::constants::PI / 2));
   check_fmt_nonempty("sva::RotY", sva::RotY(mc_rtc::constants::PI / 2));
   check_fmt_nonempty("sva::RotZ", sva::RotZ(mc_rtc::constants::PI / 2));
