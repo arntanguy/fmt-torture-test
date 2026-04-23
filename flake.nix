@@ -8,6 +8,7 @@
     inputs.mc-rtc-nix.lib.mkFlakoboros inputs (
       { lib, ... }:
       {
+        extends.fmt_9 = final: _prev: { fmt = final.fmt_9; };
         extends.fmt_10 = final: _prev: { fmt = final.fmt_10; };
         extends.fmt_11 = final: _prev: { fmt = final.fmt_11; };
         extends.fmt_12 = final: _prev: { fmt = final.fmt_12; };
