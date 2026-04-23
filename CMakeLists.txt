@@ -27,11 +27,9 @@ find_package(SpaceVecAlg REQUIRED)
 
 add_executable(torture-fmt test/torture_fmt.cpp)
 target_include_directories(torture-fmt PRIVATE ${CMAKE_SOURCE_DIR}/include)
-target_link_libraries(torture-fmt PRIVATE 
-  fmt::fmt
-  Boost::filesystem
-  eigen-fmt::eigen-fmt
-  Eigen3::Eigen
+target_link_libraries(
+    torture-fmt
+    PRIVATE fmt::fmt Boost::filesystem eigen-fmt::eigen-fmt Eigen3::Eigen
 )
 
 target_link_libraries(torture-fmt PRIVATE Catch2::Catch2WithMain)

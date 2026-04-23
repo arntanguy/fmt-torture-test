@@ -6,8 +6,7 @@
 
 #include <SpaceVecAlg/SpaceVecAlg>
 
-namespace mc_rbdyn
-{
+namespace mc_rbdyn {
 
 /** Rotation matrix from roll-pitch-yaw angles.
  *
@@ -20,8 +19,8 @@ namespace mc_rbdyn
  * \returns E Rotation matrix.
  *
  */
-inline Eigen::Matrix3d rpyToMat(const double & r, const double & p, const double & y)
-{
+inline Eigen::Matrix3d rpyToMat(const double& r, const double& p,
+                                const double& y) {
   return sva::RotX(r) * sva::RotY(p) * sva::RotZ(y);
 }
 
@@ -32,8 +31,7 @@ inline Eigen::Matrix3d rpyToMat(const double & r, const double & p, const double
  * \returns E Rotation matrix.
  *
  */
-inline Eigen::Matrix3d rpyToMat(const Eigen::Vector3d & rpy)
-{
+inline Eigen::Matrix3d rpyToMat(const Eigen::Vector3d& rpy) {
   return rpyToMat(rpy(0), rpy(1), rpy(2));
 }
 
@@ -44,8 +42,7 @@ inline Eigen::Matrix3d rpyToMat(const Eigen::Vector3d & rpy)
  * \returns X Plucker transform with no translation.
  *
  */
-inline sva::PTransformd rpyToPT(const Eigen::Vector3d & rpy)
-{
+inline sva::PTransformd rpyToPT(const Eigen::Vector3d& rpy) {
   return sva::PTransformd(rpyToMat(rpy(0), rpy(1), rpy(2)));
 }
 
@@ -60,8 +57,8 @@ inline sva::PTransformd rpyToPT(const Eigen::Vector3d & rpy)
  * \returns X Plucker transform with no translation.
  *
  */
-inline sva::PTransformd rpyToPT(const double & r, const double & p, const double & y)
-{
+inline sva::PTransformd rpyToPT(const double& r, const double& p,
+                                const double& y) {
   return sva::PTransformd(rpyToMat(r, p, y));
 }
 
@@ -75,8 +72,7 @@ inline sva::PTransformd rpyToPT(const double & r, const double & p, const double
  * quaternions, and rotation vectors".
  *
  */
-inline Eigen::Vector3d rpyFromMat(const Eigen::Matrix3d & E)
-{
+inline Eigen::Vector3d rpyFromMat(const Eigen::Matrix3d& E) {
   double roll = atan2(E(1, 2), E(2, 2));
   double pitch = -asin(E(0, 2));
   double yaw = atan2(E(0, 1), E(0, 0));
@@ -95,20 +91,19 @@ inline Eigen::Vector3d rpyFromMat(const Eigen::Matrix3d & E)
  * of this paper.
  *
  */
-inline Eigen::Vector3d rpyFromQuat(const Eigen::Quaterniond & quat)
-{
+inline Eigen::Vector3d rpyFromQuat(const Eigen::Quaterniond& quat) {
   return rpyFromMat(quat.toRotationMatrix());
 }
 
-/** Generic version that can handle a Quaternion or Matrix and returns the RPY angles */
-template<typename T>
-Eigen::Vector3d rpyFromRotation(const T & value)
-{
-  if constexpr(std::is_same_v<T, Eigen::Quaterniond>) { return rpyFromQuat(value); }
-  else
-  {
+/** Generic version that can handle a Quaternion or Matrix and returns the RPY
+ * angles */
+template <typename T>
+Eigen::Vector3d rpyFromRotation(const T& value) {
+  if constexpr (std::is_same_v<T, Eigen::Quaterniond>) {
+    return rpyFromQuat(value);
+  } else {
     return rpyFromMat(value);
   }
 }
 
-} // namespace mc_rbdyn
+}  // namespace mc_rbdyn

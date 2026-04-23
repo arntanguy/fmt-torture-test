@@ -2,15 +2,14 @@
 #include <Eigen/Core>
 
 #ifndef EIGEN_PI
-#  define EIGEN_PI 3.141592653589793238462643383279502884197169399375105820974944592307816406L
+#define EIGEN_PI \
+  3.141592653589793238462643383279502884197169399375105820974944592307816406L
 #endif
 
-namespace mc_rtc
-{
-namespace constants
-{
+namespace mc_rtc {
+namespace constants {
 
-constexpr double GRAVITY = 9.80665; // ISO 80000-3
+constexpr double GRAVITY = 9.80665;  // ISO 80000-3
 
 /**< Gravity positive along the vertical axis */
 const Eigen::Vector3d gravity = Eigen::Vector3d{0., 0., GRAVITY};
@@ -24,10 +23,7 @@ constexpr double PI = static_cast<double>(EIGEN_PI);
  *
  * @return Angle in degrees
  */
-constexpr double toDeg(const double rad)
-{
-  return rad * 180. / PI;
-}
+constexpr double toDeg(const double rad) { return rad * 180. / PI; }
 
 /**
  * @brief Converts degrees to radians
@@ -36,10 +32,7 @@ constexpr double toDeg(const double rad)
  *
  * @return Angle in radians
  */
-constexpr double toRad(const double degrees)
-{
-  return degrees * PI / 180.;
-}
+constexpr double toRad(const double degrees) { return degrees * PI / 180.; }
 
-} // namespace constants
-} // namespace mc_rtc
+}  // namespace constants
+}  // namespace mc_rtc
