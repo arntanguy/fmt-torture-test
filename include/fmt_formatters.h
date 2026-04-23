@@ -11,6 +11,7 @@
 // #include <mc_rtc/constants.h>
 #include <constants.h>
 #include <fmt/format.h>
+#include <fmt/ostream.h>
 #include <fmt/ranges.h>
 
 #include <SpaceVecAlg/SpaceVecAlg>
@@ -27,8 +28,6 @@
 // fmt 9.0.0 removed automated operator<< discovery we use fmt::streamed instead
 // when needed through a macro
 #define MC_FMT_STREAMED(X) fmt::streamed(X)
-
-#include <fmt/ostream.h>
 
 #include <boost/filesystem.hpp>
 #include <filesystem>
@@ -64,8 +63,7 @@ struct fmt::formatter<
 template <typename T, typename Char>
 struct fmt::range_format_kind<
     T, Char, std::enable_if_t<std::is_base_of_v<Eigen::EigenBase<T>, T>>>
-    : std::integral_constant<fmt::range_format, fmt::range_format::disabled> {
-};
+    : std::integral_constant<fmt::range_format, fmt::range_format::disabled> {};
 
 #define MC_FMT_OSTREAM_FORMATTER(TYPE) \
   template <>                          \
