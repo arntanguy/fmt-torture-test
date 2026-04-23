@@ -11,6 +11,7 @@
 // #include <mc_rtc/constants.h>
 #include <constants.h>
 #include <fmt/format.h>
+#include <fmt/ranges.h>
 
 #include <SpaceVecAlg/SpaceVecAlg>
 #include <filesystem>
