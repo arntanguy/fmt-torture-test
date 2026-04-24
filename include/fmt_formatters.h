@@ -6,15 +6,12 @@
 // quickly testing different version of fmt.
 
 #pragma once
-// #include <mc_rbdyn/rpy_utils.h>
-#include <rpy_utils.h>
-// #include <mc_rtc/constants.h>
-#include <constants.h>
 #include <fmt/format.h>
 #include <fmt/ostream.h>
 #include <fmt/ranges.h>
 
 #include <SpaceVecAlg/SpaceVecAlg>
+#include <boost/filesystem.hpp>
 #include <filesystem>
 
 /**
@@ -23,16 +20,6 @@
   Ubuntu 22.04 (Jammy)	8.1.1 -> has std::ostream support
   Ubuntu 24.04 (Noble)	9.1.0 -> automatics std::ostream support was removed
 */
-
-#if FMT_VERSION >= 9 * 10000
-/**
- * fmt 9.0.0 removed automated operator<< discovery
- * we use fmt::streamed instead when needed through a macro
- */
-#define MC_FMT_STREAMED(X) fmt::streamed(X)
-
-#include <boost/filesystem.hpp>
-#include <filesystem>
 
 /**
  * Since fmt10, fmt::formatter's format function should be const
@@ -70,6 +57,13 @@ struct fmt::formatter<std::filesystem::path> : fmt::formatter<std::string> {
     return fmt::formatter<std::string>::format(p.string(), ctx);
   }
 };
+
+#if FMT_VERSION >= 9 * 10000
+/**
+ * fmt 9.0.0 removed automated operator<< discovery
+ * we use fmt::streamed instead when needed through a macro
+ */
+#define MC_FMT_STREAMED(X) fmt::streamed(X)
 
 // Formatter for any Eigen type derived from EigenBase (matrices, arrays,
 // expressions, etc.) Tested for fmt_9, fmt_10, fmt_11 and fmt_12
